@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+<head>
+        <title>List of Components</title>
+        <style>
+            body{
+                background: skyblue;
+                }
+            ul {
+                list-style-type: none;
+                margin: 0;
+                padding: 0;
+                overflow: hidden;
+                background-color: #333;
+            }
+    
+            li {
+                float: left;
+            }
+    
+            li a {
+                display: block;
+                color: white;
+                text-align: center;
+                padding: 14px 16px;
+                text-decoration: none;
+            }
+    
+            li a:hover {
+                background-color: #111;
+            }
+            table{
+                width:1000px;
+                margin:auto;
+                text-align: center;
+                table-layout: auto;
+            }
+            table,tr,th,td{
+                padding: 20px;
+                color: white;
+                border:1px solid #080808;
+                border-collapse: collapse;
+                font-size: 18px;
+                font-family: Arial;
+                background: linear-gradient(top,#3c3c3c 0%,#222222 100%);
+                background:-webkit-linear-gradient(top,#3c3c3c 0%,#222222 100%);
+            }
+            .btn0{
+                background-color: yellow;
+                color: black;;
+                padding: 8px 20px;
+                font-size:16px;
+            }
+                .btn1{
+                background-color: red;
+                color: black;;
+                padding: 8px 20px;
+                font-size:16px;
+            }
+            .card {
+            background-color: #3579dc;
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+            margin: auto;
+            text-align: center;
+            font-family: arial;
+            }
+            div#loading {
+                width: 35px;
+                height: 35px;
+                display: none;
+                background: url(/media/nitesh/MyFiles/Electronics_Club/Inventory/Inventory/static/image/loading.gif) no-repeat;
+                cursor: wait;
+            }
+            div#loading_text {
+                width: 100px;
+                height: 100px;
+                background-color: transparent;
+                
+                position: absolute;
+                top:0;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                
+                margin: auto;
+            }
+            .center {
+                padding: 70px 0;
+                /* border: 3px solid green; */
+                text-align: center;
+            }
+            img {
+                display: block;
+                margin-left: auto;
+                margin-right: auto;
+                width: 75%;
+            }
+        </style>
+
+        <script type="text/javascript">
+            function loading(){
+                document.getElementById('loading').style.display = 'block'; // show
+                document.getElementById('content').style.display = 'none'; // hide
+                document.getElementById('myForm').submit(); // submit form
+            }
+        </script>
+      </head>
+    <body>
+        <div id="loading">
+            <div id="loading_text">
+                <img src="{{ url_for('static', filename='image/loading.gif') }}" alt="Loading...">
+                <h2 class="center">Unlocking... Please Wait!</h2>
+            </div>
+        </div>
+        <div id="content">
+        <ul>
+            <li><a class="active" href="{{ url_for('home') }}">Home</a></li>
+            <li><a href="{{ url_for('account') }}">Account</a></li>
+            <li><a href="{{ url_for('show_list') }}">List of Components</a></li>
+            <!-- <li><a href="{{ url_for('admin') }}">Admin</a></li> -->
+            <li><a href="{{ url_for('logout') }}">Logout</a></li>
+        </ul>
+
+        <table>
+        <tr>
+            <th>Component ID</th>
+            <th>Name of Component</th>
+            <th>Component Type</th>
+            <th>Location</th>
+            <th>Available Quantity</th>
+            <th>Description</th>
+            <!-- <th>Quantity</th> -->
+            <th>Want to Issue?</th>
+        </tr>
+            
+            {% for item in items %}
+        <tr>
+            <form id="myForm" action="{{ url_for('accessCupboard') }}" method="POST">
+                <td>{{ item.get_id() }}</td>
+                <td>{{ item.get_name() }}</td>
+                <td>{{ item.get_type() }}</td>
+                <td>{{ item.get_location() }}</td>
+                <td>{{ item.get_quantity()-item.get_issued_quantity() }}</td>
+                <td class="text-center"><button type ="button"onclick="alert('{{ item.get_description() }}')"class="Clk">Check</button></td>
+                <td><input type="number" id="quantity" name="{{ item.get_id() }}" min="0" placeholder="0"/></td>
+            </tr>
+            {% endfor %}
+            
+            <td class="text-center"><input type = "button" value = "Next" class="btn" onclick="loading()"/></td>
+        </form>
+
+        </table>
+        </div>
+        </body>
+    </html>

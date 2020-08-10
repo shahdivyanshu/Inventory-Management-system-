@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body{
+            background: skyblue;
+            }
+        ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #333;
+        }
+
+        li {
+            float: left;
+        }
+
+        li a {
+            display: block;
+            color: white;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+        }
+
+        li a:hover {
+            background-color: #111;
+        }
+        table{
+            width:1000px;
+            margin:auto;
+            text-align: center;
+            table-layout: auto;
+        }
+        table,tr,th,td{
+            padding: 20px;
+            color: white;
+            border:1px solid #080808;
+            border-collapse: collapse;
+            font-size: 18px;
+            font-family: Arial;
+            background: linear-gradient(top,#3c3c3c 0%,#222222 100%);
+            background:-webkit-linear-gradient(top,#3c3c3c 0%,#222222 100%);
+        }
+        .btn0{
+            background-color: yellow;
+            color: black;;
+            padding: 8px 20px;
+            font-size:16px;
+        }
+            .btn1{
+            background-color: red;
+            color: black;;
+            padding: 8px 20px;
+            font-size:16px;
+        }
+        .card {
+        background-color: #3579dc;
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+        margin: auto;
+        text-align: center;
+        font-family: arial;
+        }
+    </style>
+
+    {% if posts['access'] == True %}
+    <title>Login Page</title>
+    {% else %}
+    <title>Access Denied</title>
+    {% endif %}
+</head>
+<body>
+    <ul>
+        <li><a class="active" href="{{ url_for('home') }}">Home</a></li>
+        <li><a href="{{ url_for('account') }}">Account</a></li>
+        <li><a href="{{ url_for('show_list') }}">List of Components</a></li>
+        <!-- <li><a href="{{ url_for('admin') }}">Admin</a></li> -->
+        <li><a href="{{ url_for('logout') }}">Logout</a></li>
+    </ul>
+
+    <div class="level0">
+        
+        {% if posts['access'] == True %}
+            <center> <h2>Hi {{posts['student'].get_name()}}!</h2></center>
+            <!-- <div class="level1">What do you want to do?</div>
+            
+            <a href="{{ url_for('account') }}">Accounts</a><br>
+                <a href="{{ url_for('show_list') }}">List of Components</a><br>
+                <a href="{{ url_for('admin') }}">Admin</a><br>
+                <a href="{{ url_for('logout') }}">Logout</a>
+            </div> -->
+        {% else %}
+            <h2>You're not allowed to access this page.</h2>
+            
+            <div class="w3-container">
+                <form id="form" action="{{ url_for('reset_user') }}" method="POST">
+                <input type="button" class="w3-button w3-black" value="Go Back" onclick="reset_user()">
+                </form>
+            </div>
+            <script>
+                function reset_user()   {
+                    document.getElementById("form").submit()
+                }
+            </script>
+
+            <!-- <div class="w3-container">
+                    <h2>Buttons (w3-button)</h2>
+                    <input type="button" class="w3-button w3-black" value="Input Button">
+                    <button class="w3-button w3-black">Button Button</button>
+                    <a href="#" class="w3-button w3-black">Link Button</a>
+            </div> -->
+        {% endif %}
+            
+        </div>
+</html>

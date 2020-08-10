@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Account</title>
+    <style>
+        body{
+            background: skyblue;
+            }
+        ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #333;
+        }
+
+        li {
+            float: left;
+        }
+
+        li a {
+            display: block;
+            color: white;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+        }
+
+        li a:hover {
+            background-color: #111;
+        }
+        table{
+            width:1000px;
+            margin:auto;
+            text-align: center;
+            table-layout: auto;
+        }
+        table,tr,th,td{
+            padding: 20px;
+            color: white;
+            border:1px solid #080808;
+            border-collapse: collapse;
+            font-size: 18px;
+            font-family: Arial;
+            background: linear-gradient(top,#3c3c3c 0%,#222222 100%);
+            background:-webkit-linear-gradient(top,#3c3c3c 0%,#222222 100%);
+        }
+        .btn0{
+            background-color: yellow;
+            color: black;;
+            padding: 8px 20px;
+            font-size:16px;
+        }
+         .btn1{
+            background-color: red;
+            color: black;;
+            padding: 8px 20px;
+            font-size:16px;
+        }
+        .card {
+        background-color: #3579dc;
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+        margin: auto;
+        text-align: center;
+        font-family: arial;
+        }
+    </style>
+      </head>
+    <body>
+        <ul>
+            <li><a class="active" href="{{ url_for('home') }}">Home</a></li>
+            <li><a href="{{ url_for('account') }}">Account</a></li>
+            <li><a href="{{ url_for('show_list') }}">List of Components</a></li>
+            <!-- <li><a href="{{ url_for('admin') }}">Admin</a></li> -->
+            <li><a href="{{ url_for('logout') }}">Logout</a></li>
+        </ul>
+
+        <!-- Profile Card -->
+        <div class="card">
+                <h1>{{ posts['student'].get_name() }}</h1>
+                {% if posts['student'].remarks %}
+                    <p class="title">{{ posts['student'].remarks }}</p>
+                {% endif %}
+                <p class="title">Fine : Rs {{ posts['fine'] }}</p>
+        </div>
+
+        {% if posts['items'] %}
+        <table>
+        <tr>
+            <th>Component Id</th>
+            <th>Components Issued</th>
+            <th>Quantity</th>
+            <th>Date of Issue</th>
+            <th>Expected date of Return</th>
+            <th>Want to use more?<br>Renew?</th>
+            <th>Want to return?</th>
+            
+            </tr>
+                {% for item in posts['items'] %}
+                    <tr>
+                        <td>{{ item[0].get_id() }}</td>
+                        <td>{{ item[0].get_name() }}</td>
+                        <td>{{ item[1] }}</td>
+                        <td>{{ item[2] }}</td>
+                        <td>{{ item[3] }}</td>
+                        
+                        <form id="form{{ item[0].get_id() }}" action="" method="POST">
+                            <td class="text-center"><button type ="button"class="btn0" id="btn0{{ item[0].get_id() }}" name="btn0" onclick="renew_func()" value="renew">Renew</button></td>
+                            <td class="text-center"><button type ="button"class="btn1" id="btn1{{ item[0].get_id() }}" name="btn1" onclick="return_func()" value="return">Return</button></td>
+                        </form>
+                            <script>
+                                function renew_func() {
+                                    var myForm = document.getElementById("form{{ item[0].get_id() }}");
+                                    var myAction = "{{ url_for('renew') }}";
+                                    
+                                    myForm.action = myAction;
+                                    myForm.method = "POST";
+                                    myForm.innerHTML='<input type="text" name="renew" value="{{ item[0].get_id() }}" style="display:none">';
+                                    myForm.submit();
+                                }
+                                function return_func() {
+                                    var myForm = document.getElementById("form{{ item[0].get_id() }}");
+                                    var myAction = "{{ url_for('return_item') }}";
+                                    
+                                    myForm.action = myAction;
+                                    myForm.method = "POST";
+                                    myForm.innerHTML='<input type="text" name="return" value="{{ item[0].get_id() }}" style="display:none">';
+                                    myForm.submit();
+                                }
+                            </script>
+                    </tr>
+                {% endfor %}
+        {% else %}
+            <div class="level2">No item is issued by you!</div>
+        {% endif %}
+    
+        </table>
+        </body>
+    </html>

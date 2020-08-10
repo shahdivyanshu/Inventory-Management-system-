@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+        <title>Issue Page</title>
+    <style>
+    body{
+        background: skyblue;
+        }
+        table{
+            width:800px;
+            margin:auto;
+            text-align: center;
+            table-layout: auto;
+        }
+        table,tr,th,td{
+            padding: 20px;
+            color: white;
+            border:1px solid #080808;
+            border-collapse: collapse;
+            font-size: 18px;
+            font-family: Arial;
+            background: linear-gradient(top,#3c3c3c 0%,#222222 100%);
+            background:-webkit-linear-gradient(top,#3c3c3c 0%,#222222 100%);
+        }
+        .btn{
+            background-color: green;
+            color: black;;
+            padding: 8px 20px;
+            font-size:16px;
+        }
+    </style>
+      </head>
+    <body>
+
+    {% if (posts['access_list']) |count != 0 %}
+            <table>
+            <tr>
+                <th>Component ID</th>
+                <!-- <th>Component name</th> -->
+                <!-- <th>Description</th> -->
+                <th>Requested Quantity</th>
+                <!-- <th>Available</th> -->
+                <th>Remarks</th>
+                </tr>
+        <form id = "issue_list" action="{{ url_for('issue') }}" method="POST">
+            {% for item in zip(posts['access_list'], posts['valid_request'], posts['requested_items'].items()) %}
+            <tr>
+                <td>{{ item[2][0] }}</td>
+                <!-- <td>Component name</td> -->
+                <!-- <td>Description</td> -->
+                <td>{{ item[2][1] }}</td>
+
+                <input type="text" id="{{ item[2][0] }}" value="{{ item[2][1] }}" style="display:none">
+                <!-- If valid request -->
+                {% if item[1] %}
+                    <!-- If access granted -->
+                    {% if item[0] %}
+                        <td>"Lock is opened"</td>
+                        <td><input type="number" id="barcode" placeholder="Enter barcode here" required="required"></td>
+                    {% else %}
+                        <td>"Access Denied"</td>
+                    {% endif %}
+                {% else %}
+                    <td>"Invalid Quantity Requested"</td>
+                {% endif %}
+                
+            </tr>
+            {% endfor %}
+        </form>
+    {% endif %}
+            {% if posts['flag'] %}
+                <div class="w3-container">
+                    <input type="button" class="w3-button w3-black" value="Issue" onclick="issueFunction()">
+                </div>
+            {% else %}
+            <form id="home" method="POST" action="{{ url_for('home') }}">
+                <div class="w3-container">
+                    <input type="button" class="w3-button w3-black" value="Go Home" onclick="goHomeFunction()">
+                </div>
+            </form>
+            {% endif %}
+
+            <script>
+                function goHomeFunction()   {
+                    document.getElementById("home").submit();
+                }
+                function issueFunction()    {
+                    document.getElementById("issue_list").submit();
+                }
+            </script>
+
+            </table>
+        </body>
+    </html>
